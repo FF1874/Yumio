@@ -1,0 +1,26 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>Yumio · 3D 菜谱验收</title><style>*{box-sizing:border-box}body{margin:0;background:#e7e9e2;color:#25362c;font:14px system-ui}header{background:#fff;padding:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}button,select{font:inherit;padding:8px 12px}main{padding:15px;overflow:auto}iframe{display:block;border:0;margin:auto;width:1280px;height:900px;background:white}#status{padding:8px 16px}#results{padding:16px;font:12px/1.5 monospace;white-space:pre-wrap}</style><header><strong>3D 菜谱 · 本地浏览器验收</strong><select id="size"><option>360</option><option>390</option><option>768</option><option selected>1280</option><option>1440</option></select><button id="apply">切换宽度</button><button id="run">运行菜谱验收</button><button id="jump">滚动到菜谱</button></header><p id="status">等待运行</p><main><iframe id="frame" title="菜谱预览" src="qa-product-app.html#market"></iframe></main><pre id="results"></pre><script>
+const frame=document.querySelector('#frame'),size=document.querySelector('#size'),status=document.querySelector('#status'),results=document.querySelector('#results');
+const pause=()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+const app=()=>frame.contentWindow,doc=()=>frame.contentDocument;
+async function apply(){frame.style.width=size.value+'px';frame.style.height=(Number(size.value)<651?820:950)+'px';await pause();doc().querySelector('#marketRecipes').scrollIntoView();}
+frame.onload=apply;document.querySelector('#apply').onclick=apply;document.querySelector('#jump').onclick=()=>doc().querySelector('#marketRecipes').scrollIntoView();
+document.querySelector('#run').onclick=async()=>{let passes=0,fails=0;const lines=[];delete results.dataset.fails;document.querySelector('#run').disabled=true;function check(name,ok,details){ok?passes++:fails++;lines.push((ok?'PASS ':'FAIL ')+name+(details?' '+JSON.stringify(details):''));results.textContent=lines.join('\n');status.textContent=passes+' 通过 / '+fails+' 失败';}
+try{
+ const w=app(),d=doc(),ids=[...d.querySelectorAll('#recipeGrid [data-recipe-id]')].map(card=>card.dataset.recipeId);
+ let images=[...d.querySelectorAll('#recipeGrid .recipeRenderImage')];
+ check('六款独立图片',images.length===6&&new Set(images.map(i=>i.getAttribute('src'))).size===6);
+ for(const img of images){img.loading='eager';await img.decode();check(img.closest('[data-recipe-id]').dataset.recipeId+' 图片解码',img.naturalWidth===810&&img.naturalHeight===585,{width:img.naturalWidth,height:img.naturalHeight});}
+ for(const width of [360,375,390,650,768,900,1024,1280,1440]){frame.style.width=width+'px';await pause();await pause();check(width+'px 无横向溢出',d.documentElement.scrollWidth<=w.innerWidth,{viewport:w.innerWidth,scroll:d.documentElement.scrollWidth});
+ for(const id of ids){const card=d.querySelector('#recipeGrid [data-recipe-id="'+id+'"]'),img=card.querySelector('img'),box=img.parentElement.getBoundingClientRect(),r=img.getBoundingClientRect();check(width+'px '+id+' 完整展示',r.width>0&&Math.abs(r.width/r.height-810/585)<.01&&r.left>=box.left-.5&&r.right<=box.right+.5&&getComputedStyle(img).objectFit==='contain');}}
+ frame.style.width='390px';await pause();
+ const card=d.querySelector('#recipeGrid [data-recipe-id="cake-strawberry-mango"]');
+ const details=card.querySelector('details');details.querySelector('summary').click();check('配方可展开',details.open&&details.textContent.includes('草莓果泥 80%'));
+ card.querySelector('.recipeRender').click();await pause();
+ check('点击封面直接进入工坊',w.location.hash==='#studio'&&d.querySelector('#workName').textContent==='草莓芒果奶油蛋糕');
+ check('成品装饰可单独编辑',d.querySelectorAll('#editor [data-i]').length===13);
+ check('配方选中两种材料',d.querySelectorAll('.materialOption input:checked').length===2);
+ w.location.hash='#market';await pause();check('展开状态保留',d.querySelector('#recipeGrid [data-recipe-id="cake-strawberry-mango"] details').open);
+ check('无应用脚本错误',!(w.__productErrors||[]).length,w.__productErrors);
+}catch(error){check('验收异常',false,String(error))}
+results.dataset.passes=passes;results.dataset.fails=fails;document.querySelector('#run').disabled=false;status.textContent='完成：'+passes+' 通过 / '+fails+' 失败';size.value='390';await apply();};
+</script></html>

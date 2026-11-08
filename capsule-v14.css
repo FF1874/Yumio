@@ -1,0 +1,41 @@
+/* The shelf and batch picker use one product image per material, independent of its verdict. */
+#shelf .productPhoto {
+    overflow: hidden;
+    background: radial-gradient(ellipse at 48% 44%, #fffef8, #f3f0e7 72%, #ebe7dc);
+}
+#shelf .productPhoto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 3px 4px;
+    object-fit: contain;
+    box-sizing: border-box;
+}
+
+#materialOptions .materialOption {
+    grid-template-columns: auto 34px minmax(0, 1fr);
+}
+#materialOptions .materialSwatch {
+    display: block;
+    width: 34px;
+    height: 44px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: var(--capsule-art) center / auto 44px no-repeat !important;
+}
+
+.materialOption:has([data-material="0"]), .picks [data-scan="0"] { --capsule-art: url('assets/capsules/0.webp'); }
+.materialOption:has([data-material="1"]), .picks [data-scan="1"] { --capsule-art: url('assets/capsules/1.webp'); }
+.materialOption:has([data-material="2"]), .picks [data-scan="2"] { --capsule-art: url('assets/capsules/2.webp'); }
+.materialOption:has([data-material="3"]), .picks [data-scan="3"] { --capsule-art: url('assets/capsules/3.webp'); }
+.materialOption:has([data-material="4"]), .picks [data-scan="4"] { --capsule-art: url('assets/capsules/4.webp'); }
+
+.picks button[data-scan] i {
+    display: inline-block;
+    width: 16px;
+    height: 23px;
+    border-radius: 0;
+    vertical-align: middle;
+    background: var(--capsule-art) center / auto 26px no-repeat !important;
+}

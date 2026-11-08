@@ -1,0 +1,36 @@
+<section id="profile" hidden>
+  <div class="marketHeading"><div><small>Yumio / PERSONAL ARCHIVE</small><h1>个人档案库<span class="titleDot">.</span></h1></div><button class="secondary" id="addProfile" type="button">新建档案 ＋</button></div>
+  <div class="profileLayout">
+    <aside class="profileRail"><p class="profileEyebrow">我的档案 / <span id="profileTotal">01</span></p><div id="profileList" class="profileList" aria-label="选择个人档案"></div></aside>
+    <div class="profileMain">
+      <div class="profileIdentity"><div class="profileAvatar" id="profileAvatar" aria-hidden="true">知</div><div class="profileIdentityText"><div class="profileNameRow"><h2 id="profileDisplayName">小知</h2><span id="profileFictional" class="profileSample">虚构示例</span></div><p id="profileMeta">6 岁 · 男孩</p><span class="profileActive" id="profileActive">当前使用</span></div><button type="button" class="primary" id="editProfile">编辑档案 ↗</button></div>
+      <div id="profileReadView">
+        <section class="profileSection"><h3><span>01</span> 过敏</h3><dl class="profileAllergySummary"><div><dt>重度过敏</dt><dd id="viewSevere"></dd></div><div><dt>轻度过敏</dt><dd id="viewMild"></dd></div></dl></section>
+        <section class="profileSection"><h3><span>02</span> 其他忌口</h3><p class="profileRestrictionValue" id="viewOther"></p></section>
+        <section class="profileSection"><h3><span>03</span> 饮食偏好</h3><dl class="profilePreferences"><div><dt>喜欢的食物</dt><dd id="viewLikes"></dd></div><div><dt>口味</dt><dd id="viewFlavor"></dd></div><div><dt>口感</dt><dd id="viewTexture"></dd></div><div class="profileFull"><dt>备注</dt><dd id="viewNotes"></dd></div></dl></section>
+      </div>
+      <form id="profileForm" hidden>
+        <div class="profileEditHeading"><h3 id="profileEditTitle">编辑档案</h3><span>保存后生效</span></div>
+        <section class="profileSection"><h3>基本信息</h3><div class="profileFields">
+          <label>称呼<input id="profileName" maxlength="24" required autocomplete="off"></label>
+          <label>年龄（岁）<input id="profileAge" type="number" min="0" max="120" step="1" placeholder="选填"></label>
+          <label>性别<select id="profileGender"><option value="未填写">未填写</option><option value="男孩">男孩</option><option value="女孩">女孩</option><option value="男性">男性</option><option value="女性">女性</option><option value="不透露">不透露</option></select></label>
+        </div></section>
+        <section class="profileSection"><h3>过敏</h3><div class="profileFields profileTwoColumns">
+          <label>重度过敏<textarea id="profileSevere" rows="2" maxlength="500" placeholder="例如：小麦、鸡蛋黄" aria-describedby="allergyHelp"></textarea></label>
+          <label>轻度过敏<textarea id="profileMild" rows="2" maxlength="500" placeholder="例如：番茄" aria-describedby="allergyHelp"></textarea></label>
+        </div><p class="profileHint" id="allergyHelp">按医生建议填写，轻度也会拦截。用顿号分隔；没有已知过敏时填写「无已知过敏」。</p></section>
+        <section class="profileSection"><h3>其他忌口</h3><label class="profileField">需要避开的食物<textarea id="profileOther" rows="2" maxlength="500" placeholder="例如：牛奶；没有时填写「无其他忌口」"></textarea></label><p class="profileHint">与过敏分开记录，同样参与材料比对。未识别或未确认的信息会阻止模拟。</p></section>
+        <section class="profileSection"><h3>饮食偏好</h3><div class="profileFields">
+          <label>喜欢的食物<input id="profileLikes" maxlength="160" placeholder="选填"></label><label>口味<input id="profileFlavor" maxlength="160" placeholder="选填"></label><label>口感<input id="profileTexture" maxlength="160" placeholder="选填"></label><label class="profileFull">备注<textarea id="profileNotes" rows="2" maxlength="500" placeholder="其他习惯（不参与忌口比对）"></textarea></label>
+        </div></section>
+        <label class="profileRemember"><input type="checkbox" id="remember"><span>在此浏览器记住档案<small>包含饮食与过敏记录，仅保存在本机，不上传。共用设备请勿开启。</small></span></label>
+        <div class="profileSaveBar"><button type="button" class="secondary" id="resetProfileEdit">取消</button><button type="submit" class="primary" id="saveProfileV2">保存档案 ↗</button></div>
+      </form>
+      <p class="profileMapping" id="profileMapping" aria-live="polite"></p>
+      <p id="saveNote" role="status" class="profileHint"></p>
+      <details class="profileSettings"><summary>存储与隐私</summary><p class="profileHint" id="profileStorageState">仅保留在当前页面。</p><button type="button" id="clearProfileStorage" class="plain">清除本机保存的档案</button></details>
+    </div>
+  </div>
+  <div hidden aria-hidden="true"><details id="familyPanel"></details><output id="matchCount"></output><div id="recommend"></div><div id="myStock"></div></div>
+</section>

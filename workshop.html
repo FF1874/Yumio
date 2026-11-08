@@ -1,0 +1,26 @@
+<section id="studio" hidden>
+  <div class="wkHeading"><h1>创作工坊</h1><div class="wkModes" aria-label="创作方式">
+    <button data-mode="generate" aria-pressed="false">图生 3D</button><button data-mode="template" aria-pressed="true">模板创作</button>
+  </div></div>
+  <div id="generationWorkshop" hidden></div>
+  <div id="workspace" class="wkLayout">
+    <aside class="wkShelf"><button class="wkTemplateSwitch" id="chooseTemplate" aria-haspopup="dialog"><img id="currentCover" alt=""><span><small>切换底座</small><b id="currentTemplate"></b></span><i aria-hidden="true">⌄</i></button>
+    <div class="wkLibraryTabs"><button id="showLibrary" aria-pressed="true">素材库</button><button id="showPersonal" aria-pressed="false">我的部件</button></div>
+    <div id="foodCategories" aria-label="素材分类"></div><div id="templateLibrary"></div></aside>
+    <div class="benchMain wkStage" tabindex="-1"><div class="wkStageHeader"><div><small>操作台</small><h2 id="workName"></h2></div>
+    <div id="workViews" class="wkViewChips" aria-label="选择视图"><button data-wk-view="perspective" aria-pressed="true">透视图</button><button data-wk-view="top" aria-pressed="false">顶视图</button></div></div>
+    <div class="viewPair" id="viewPair" data-show="perspective">
+    <section id="perspectiveView" class="viewCard"><canvas tabindex="0" id="scene" width="840" height="500" aria-label="透视操作台，拖动部件移动，拖动空白处旋转视角"></canvas><div id="sceneSelection" class="selectionFrame" hidden aria-label="选中装饰">
+<button type="button" class="objectHandle rotateHandle" data-scene-handle="rotate" aria-label="旋转选中装饰">↻</button>
+<button type="button" class="objectHandle resizeHandle" data-scene-handle="resize" aria-label="缩放选中装饰">↘</button>
+<button type="button" class="objectHandle deleteHandle" data-edit="remove" aria-label="删除选中装饰">×</button>
+<div class="objectBar"><button data-edit="shrink" aria-label="缩小">−</button><button data-edit="grow" aria-label="放大">＋</button><button data-edit="duplicate" aria-label="复制">⧉</button><button data-edit="turn" aria-label="旋转 15 度">↻</button><a id="pickedModel" hidden download aria-label="下载模型">↓</a></div></div><div id="modelTools" class="wkSceneTools"><button id="resetView">复位</button><button id="rotate">旋转预览</button><button id="explodePastry" aria-pressed="false">分层查看</button></div></section>
+    <section id="topView" class="viewCard"><div id="editor" class="editor" aria-label="顶视图部件摆放区"></div></section>
+    </div>
+    <div class="wkBottom"><div><button id="undo" aria-label="撤销">↶ 撤销</button><button id="redo" aria-label="重做">↷ 重做</button></div><button class="primary" id="chooseCapsule">选择胶囊 →</button></div>
+    <div id="materialStep" hidden><div class="wkMaterialHead"><h3>胶囊校验</h3><button id="closeMaterials" aria-label="收起胶囊校验">收起 ↑</button></div>
+    <!--MATERIAL--><div class="wkPrint"><span id="printReadiness" aria-live="polite"></span><button id="readinessAction" class="secondary"></button><button id="printBtn" class="primary">模拟打印 →</button></div><div id="printState" aria-live="polite"></div></div></div>
+  </div>
+  <dialog class="wkPicker" id="templatePicker"><div class="wkPickerHead"><h2>选择底座</h2><button id="closePicker" aria-label="关闭模板选择">×</button></div><p id="carryRow"><label><input type="checkbox" id="carryDecor"> 同时复制当前装饰</label></p><div id="templateCards"></div><div class="wkPresetActions"><button id="restorePreset" type="button">恢复示例装饰</button><button id="emptyBase" type="button">从空白底座开始</button></div><details id="savedCopies" hidden><summary>菜谱草稿</summary><div id="recipeCopies"></div></details><button id="oldDecor" hidden type="button">取回上一版作品的装饰</button></dialog>
+  <div hidden inert><!--COMPAT--></div>
+</section>

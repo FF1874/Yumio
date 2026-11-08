@@ -1,1 +1,34 @@
-# Yumio
+# Yumio · 食物创作工坊
+
+一款可玩、可定制、无需清洗的胶囊食品3D打印机。让过敏儿童也能吃上自己喜欢、同伴也有的零食；让家长更省心，更放心。
+
+**[打开 Yumio 在线体验](https://ankuan-studio-visual.qbj26qz7cw.chatgpt.site/#home)** · [进入创作工坊](https://ankuan-studio-visual.qbj26qz7cw.chatgpt.site/#studio) · [产品介绍 PDF](https://ankuan-studio-visual.qbj26qz7cw.chatgpt.site/assets/home/product-introduction.pdf)
+
+Ship it Sunday #015 上海参赛项目，主题为「回到未来的 3D 创作」。
+
+## 体验流程
+
+1. 在「个人档案库」录入忌口，然后到「创作集市」选择材料胶囊。比如录入鸡蛋过敏后，选择含鸡蛋的无麸质饼干胶囊，页面会指出冲突并阻止模拟打印。
+2. 在「创作工坊」画一朵花或上传照片，通过 Hi3D 生成模型。也可以导入已有 GLB，或预览本地浮雕。
+3. 选择蛋糕、披萨或饼干底座，添加生成的部件，拖动、缩放和旋转。所选批次与档案匹配后可体验模拟打印。
+
+网页演示创作和批次校验流程，硬件为产品设计方案。配料匹配不等于实际食用安全。
+
+## 本地运行
+
+在仓库根目录运行：
+
+```sh
+python3 -m http.server 8000
+```
+
+用浏览器打开 <http://localhost:8000/>。仓库包含可直接预览的 HTML 和所需静态素材。
+
+开发时编辑对应的 CSS、JS 或 HTML 模块，再运行 `python3 build.py` 重新生成 `index.html` 和部署输出 `dist/`。本地静态预览支持档案、材料校验、手绘、模板拼搭和 GLB 导入。在线 Hi3D 生成需要服务端 Worker、D1 数据库以及部署环境中的项目授权。
+
+## 代码与素材
+
+- `workshop.*`、`template-assets.js`、`generation-workshop.js` 实现模板拼搭、素材库和图生 3D。
+- `profile-v2.*`、`workflow-v2.js` 处理个人档案和胶囊批次比对。
+- `hi3d-worker.js` 与 `drizzle/` 处理在线生成、项目授权和积分额度。
+- `assets/` 包含设备图片、模型、菜谱、素材和首页产品介绍。

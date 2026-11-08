@@ -1,0 +1,93 @@
+[
+  {
+    "name": "startup in DOM mock",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "initial pieces",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "material adds and preserves",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "duplicate",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "undo",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "redo",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "command color",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "command angle",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "market opens cookie without overwriting cake",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "max 24 parts cap",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "allergen denied",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "safe capsule allowed",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "unapproved batch denied",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "rotated shape and selection handles stay within all view sizes",
+    "pass": true,
+    "detail": {
+      "cases": 2816,
+      "errors": []
+    }
+  },
+  {
+    "name": "eight added assets fit actual canvas commands",
+    "pass": true,
+    "detail": {
+      "minY": 84.72928481847262,
+      "negativeVertices": 0
+    }
+  },
+  {
+    "name": "24 overlapping parts fit at 36 orbit and layer combinations",
+    "pass": true,
+    "detail": []
+  },
+  {
+    "name": "rendering does not mutate shape coordinates",
+    "pass": true,
+    "detail": null
+  }
+]

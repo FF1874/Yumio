@@ -1,0 +1,22 @@
+#home .hero h2{max-width:21em;text-wrap:balance}
+#home .hero h2 span{display:inline-block}
+#home .hero p{max-width:29em;text-wrap:pretty}
+#home .productGallery{margin:0;min-width:0;align-self:center;background:#f4ede4;border:1px solid #e0e3da;border-radius:18px;overflow:hidden}
+.productGallery>img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;background:#e4cdb7}
+.productGallery figcaption{display:flex;justify-content:center;gap:4px;padding:9px;background:#fafbf7}
+.productGallery button,.deckOriginal,#home .hero [data-open-intro]{font:inherit;cursor:pointer}
+.productGallery button{border:0;border-radius:16px;padding:6px 16px;background:transparent;color:#4f6456;font-size:13px}
+.productGallery button[aria-pressed=true]{color:#fff;background:#335242}
+#home .hero [data-open-intro]{border:1px solid #cbd4c9;background:transparent;border-radius:9px;padding:10px 18px;color:#324e41}
+.homeDeck{margin:44px auto 28px;width:min(100%,1120px);scroll-margin-top:98px}
+.deckHeading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.deckHeading h2{margin:0;color:#283f34;font-size:clamp(22px,2.3vw,32px)}
+.deckOriginal{flex:none;font-size:13px;color:#365444;text-decoration:underline;text-underline-offset:3px}
+.deckPages{display:grid;gap:clamp(12px,2vw,24px)}
+.deckPages img{display:block;width:100%;height:auto;aspect-ratio:16/9;border:1px solid #e2dfd4;border-radius:12px;background:#faf5e9}
+.deckEnd{display:flex;justify-content:flex-end;margin-top:16px}
+@media(max-width:650px){
+  .homeDeck{margin:26px auto 20px;scroll-margin-top:128px}
+  .deckHeading{gap:8px}.deckOriginal{font-size:12px}
+  .deckPages img{border-radius:8px}
+}
