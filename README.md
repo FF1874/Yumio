@@ -2,7 +2,7 @@
 
 一款可玩、可定制、无需清洗的胶囊食品3D打印机。让过敏儿童也能吃上自己喜欢、同伴也有的零食；让家长更省心，更放心。
 
-**[打开 Yumio 在线体验](https://ankuan-studio-visual.qbj26qz7cw.chatgpt.site/#home)** · [进入创作工坊](https://ankuan-studio-visual.qbj26qz7cw.chatgpt.site/#studio) · [产品介绍 PDF](https://ankuan-studio-visual.qbj26qz7cw.chatgpt.site/assets/home/product-introduction.pdf)
+**[打开 Yumio 在线体验](https://43.110.27.83/yumio/#home)** · [进入创作工坊](https://43.110.27.83/yumio/#studio) · [产品介绍 PDF](https://43.110.27.83/yumio/assets/home/product-introduction.pdf)
 
 Ship it Sunday #015 上海参赛项目，主题为「回到未来的 3D 创作」。
 
