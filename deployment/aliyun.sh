@@ -5,7 +5,7 @@ base=/opt/yumio/release-938e596
 tmp=$(mktemp -d /tmp/yumio-install-XXXXXXXX)
 cd "$tmp"
 curl -fsSL --retry 2 --max-time 75 https://codeload.github.com/FF1874/Yumio/tar.gz/938e5963eff981b15f7ffd60bac75ae204891cf6 -o repo.tar.gz
-tar -xzf repo.tar.gz --strip-components=1 --wildcards '*/index.html' '*/assets'
+tar -xzf repo.tar.gz --strip-components=1 --exclude='*/assets/recipes/README.md' --wildcards '*/index.html' '*/assets'
 echo 'aa8805fdf7ad7f5e0117e4d9fca962f253ce2f2d4b2d2d7177600e7e3486efc4  index.html' | sha256sum -c -
 python3 - <<'PY'
 import hashlib
