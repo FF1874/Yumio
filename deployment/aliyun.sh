@@ -18,70 +18,76 @@ p.write_text(s.replace("fetch('/api/generation/'","fetch('api/generation/'"))
 PY
 mkdir -p "$base/public"
 cp -r index.html assets "$base/public/"
-cat > "$base/Caddyfile" <<'CADDY'
-{
-  admin off
-  auto_https off
-}
-:8080 {
-  root * /srv
-  header X-Content-Type-Options nosniff
-  @api path /api/generation/create /api/generation/status /api/generation/model
-  handle @api {
-    @caller {
-      method POST
-      header Origin https://43.110.27.83
-      header Content-Type application/json*
-    }
-    handle @caller {
-      request_body {
-        max_size 2600000
-      }
-      reverse_proxy https://ankuan-studio-visual.qbj26qz7cw.chatgpt.site {
-        header_up Host ankuan-studio-visual.qbj26qz7cw.chatgpt.site
-        header_up Origin https://ankuan-studio-visual.qbj26qz7cw.chatgpt.site
-        header_up -Cookie
-        header_up -Authorization
-        header_up -Referer
-        header_down -Set-Cookie
-      }
-    }
-    respond 403
-  }
-  handle {
-    file_server
-  }
-}
-CADDY
-img=$(docker inspect -f '{{.Image}}' side-b-web-1)
-net=$(docker inspect -f '{{range $n, $v := .NetworkSettings.Networks}}{{$n}}{{end}}' side-b-web-1)
-docker run --rm --network none -v "$base/Caddyfile:/etc/caddy/Caddyfile:ro" "$img" caddy validate --config /etc/caddy/Caddyfile
-if ! docker inspect yumio-web >/dev/null 2>&1; then
- docker run -d --name yumio-web --restart unless-stopped --network "$net" --cap-drop ALL --security-opt no-new-privileges --memory 96m --log-opt max-size=2m --log-opt max-file=2 -v "$base/public:/srv:ro" -v "$base/Caddyfile:/etc/caddy/Caddyfile:ro" "$img"
-fi
-sleep 2
-docker exec side-b-web-1 wget -qO /tmp/yumio-index-check.html http://yumio-web:8080/
-docker exec side-b-web-1 grep -q '<title>Yumio' /tmp/yumio-index-check.html
+web=side-b-web-1
+docker inspect "$web" --format '{{.State.Running}}' | grep -qx true
+docker exec "$web" mkdir -p /data/yumio-releases/938e596
+tar -C "$base/public" -cf - index.html assets | docker exec -i "$web" tar -xf - -C /data/yumio-releases/938e596
+docker exec "$web" grep -q '<title>Yumio' /data/yumio-releases/938e596/index.html
 cfg=/opt/side-b/deployment/Caddyfile
 cp "$cfg" original
-python3 - <<'PY'
+cat > yumio-route <<'ROUTE'
+  redir /yumio /yumio/ 308
+  handle_path /yumio/* {
+    @generation path /api/generation/create /api/generation/status /api/generation/model
+    handle @generation {
+      @caller {
+        method POST
+        header Origin https://43.110.27.83
+        header Content-Type application/json*
+      }
+      handle @caller {
+        request_body {
+          max_size 2600000
+        }
+        reverse_proxy https://ankuan-studio-visual.qbj26qz7cw.chatgpt.site {
+          header_up Host ankuan-studio-visual.qbj26qz7cw.chatgpt.site
+          header_up Origin https://ankuan-studio-visual.qbj26qz7cw.chatgpt.site
+          header_up -Cookie
+          header_up -Authorization
+          header_up -Referer
+          header_down -Set-Cookie
+        }
+      }
+      respond 403
+    }
+    handle {
+      root * /data/yumio-releases/938e596
+      header X-Content-Type-Options nosniff
+      file_server
+    }
+  }
+ROUTE
+python3 - <<'PYTHON'
 from pathlib import Path
-s=Path('original').read_text();marker='reverse_proxy app:4173 {';assert s.count(marker)==1 and '/yumio' not in s
-s=s.replace(marker,'redir /yumio /yumio/ 308\n  handle_path /yumio/* {\n    reverse_proxy yumio-web:8080\n  }\n  '+marker)
+s=Path('original').read_text()
+import re
+marker=re.compile(r'(?m)^([ \t]*)reverse_proxy\s+app:4173\s*\{')
+assert len(marker.findall(s))==1, 'Existing application route was not found'
+r=Path('yumio-route').read_text()
+if r not in s:
+    assert '/yumio' not in s, 'An unrelated existing Yumio route needs review'
+    s=marker.sub(lambda m:r+m.group(0),s,count=1)
 Path('candidate').write_text(s)
-PY
-docker cp candidate side-b-web-1:/tmp/YumioCaddyfile
-docker exec side-b-web-1 caddy validate --config /tmp/YumioCaddyfile --adapter caddyfile
-backup=/opt/yumio/Caddyfile.pre-yumio-$(date -u +%Y%m%dT%H%M%SZ)
-cp -p "$cfg" "$backup"
-curl -fsS --max-time 10 https://43.110.27.83/ -o before
-rollback(){ cp "$backup" "$cfg"; docker restart side-b-web-1 >/dev/null; }
-trap rollback ERR
-cp candidate "$cfg"
-docker restart side-b-web-1 >/dev/null
-curl -fsS --retry 7 --retry-delay 2 --retry-all-errors --max-time 12 https://43.110.27.83/yumio/ -o yumio.html
-grep -q '<title>Yumio' yumio.html
-curl -fsS --max-time 12 https://43.110.27.83/ -o after
+PYTHON
+docker exec -i "$web" sh -c 'cat > /tmp/YumioCaddyfile' < candidate
+docker exec "$web" caddy validate --config /tmp/YumioCaddyfile --adapter caddyfile
+check_url(){ curl --noproxy '*' --resolve 43.110.27.83:443:127.0.0.1 -fsS --max-time 12 --retry 4 --retry-delay 1 --retry-all-errors "$@"; }
+check_url https://43.110.27.83/ -o before
+if ! cmp -s candidate original; then
+  backup=/opt/yumio/Caddyfile.pre-yumio-$(date -u +%Y%m%dT%H%M%SZ)
+  cp -p "$cfg" "$backup"
+  rollback(){ cp "$backup" "$cfg"; docker restart "$web" >/dev/null; }
+  trap rollback ERR
+  cat candidate > "$cfg"
+  docker restart "$web" >/dev/null
+fi
+check_url https://43.110.27.83/yumio/ -o yumio.html
+cmp yumio.html "$base/public/index.html"
+check_url https://43.110.27.83/ -o after
 cmp before after
 trap - ERR
+# Remove only the obsolete test container if its app directory matches this release.
+if test "$(docker inspect -f '{{range .Mounts}}{{if eq .Destination "/srv"}}{{.Source}}{{end}}{{end}}' yumio-web 2>/dev/null || true)" = "$base/public"; then
+  docker rm -f yumio-web >/dev/null
+fi
 echo YUMIO_PUBLIC_READY
